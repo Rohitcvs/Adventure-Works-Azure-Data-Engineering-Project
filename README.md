@@ -31,6 +31,10 @@ Source data
 [ Power BI ]  ── interactive dashboards & reporting
 ```
 
+## Dashboard
+
+![Power BI report served from the Synapse gold layer](PowerBI/dashboard.png)
+
 ## Tech Stack
 
 | Layer          | Technology                               | Role                                            |
