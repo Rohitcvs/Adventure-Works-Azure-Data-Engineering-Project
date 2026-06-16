@@ -1,13 +1,15 @@
-# Adventure-Works-Azure-Data-Engineering-Project
+## Adventure-Works-Azure-Data-Engineering-Project
 A production-style, end-to-end batch data pipeline on Microsoft Azure that takes raw retail data from source to dashboard. The project ingests the AdventureWorks dataset, refines it through a medallion (bronze → silver → gold) lakehouse architecture, and delivers clean, analytics-ready data to Power BI — demonstrating the full data engineering lifecycle: ingestion, transformation, modeling, serving, and visualization.
 
 Built with the modern Azure data stack: Azure Data Factory, ADLS Gen2, Azure Databricks (PySpark), Azure Synapse Analytics, and Power BI.
 
-# Business Context
+## Business Context
 AdventureWorks is a fictional retail company with sales, customer, product, and territory data spread across multiple source tables. The business question this pipeline supports: how are sales performing across products, regions, and customer segments over time?
 Raw operational data isn't fit for that kind of analysis directly — it's messy, unmodeled, and spread out. This pipeline turns it into a clean dimensional model that a business analyst can slice in Power BI without touching the underlying complexity.
 
-# Architecture
+## Architecture
+
+```
 Source data
       │
       ▼
@@ -27,6 +29,7 @@ Source data
       │
       ▼
 [ Power BI ]  ── interactive dashboards & reporting
+```
 
 ## Tech Stack
 
