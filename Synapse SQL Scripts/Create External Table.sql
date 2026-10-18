@@ -9,13 +9,13 @@ WITH
 CREATE EXTERNAL DATA SOURCE source_silver
 WITH (
     LOCATION = 'https://awstoragelake4.dfs.core.windows.net/silver', 
-    CREDENTIAL = cred_rohit,
+    CREDENTIAL = cred_rohit
 );
 -- Create another external data source named 'source_gold', pointing to the 'gold' directory in Azure Data Lake Storage.
 CREATE EXTERNAL DATA SOURCE source_gold
 WITH (
     LOCATION = 'https://awstoragelake4.dfs.core.windows.net/gold', 
-    CREDENTIAL = cred_rohit, 
+    CREDENTIAL = cred_rohit
 );
 -- Create an external file format for reading Parquet files with Snappy compression.
 CREATE EXTERNAL FILE FORMAT format_parquet 
@@ -33,8 +33,6 @@ WITH (
 )
 AS
 SELECT * FROM gold.sales;
-
-
 
 
 
