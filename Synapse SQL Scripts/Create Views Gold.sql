@@ -1,7 +1,4 @@
-DROP VIEW IF EXISTS gold.calendar
-GO
-
-CREATE VIEW gold.calendar
+CREATE OR ALTER VIEW gold.calendar
 AS
 SELECT *
 FROM OPENROWSET(
@@ -10,7 +7,7 @@ FROM OPENROWSET(
 ) as QUER1
 GO
 
-CREATE VIEW gold.customers
+CREATE OR ALTER VIEW gold.customers
 AS
 SELECT
     *
@@ -22,7 +19,7 @@ FROM
         ) as QUER1
 GO
 
-CREATE VIEW gold.products
+CREATE OR ALTER VIEW gold.products
 AS
 SELECT
     *
@@ -34,7 +31,7 @@ FROM
         ) as QUER1
 GO
 
-CREATE VIEW gold.Product_Categories
+CREATE OR ALTER VIEW gold.Product_Categories
 AS
 SELECT
     *
@@ -46,7 +43,7 @@ FROM
         ) as QUER1
 GO
 
-CREATE VIEW gold.returns
+CREATE OR ALTER VIEW gold.returns
 AS
 SELECT
     *
@@ -58,7 +55,7 @@ FROM
         ) as QUER1
 GO
 
-CREATE VIEW gold.sales
+CREATE OR ALTER VIEW gold.sales
 AS
 SELECT 
     * 
@@ -70,7 +67,7 @@ FROM
         ) as QUER1
 GO
 
-CREATE VIEW gold.subcat
+CREATE OR ALTER VIEW gold.subcat
 AS
 SELECT 
     * 
@@ -82,7 +79,7 @@ FROM
         ) as QUER1
 GO
 
-CREATE VIEW gold.territories
+CREATE OR ALTER VIEW gold.territories
 AS
 SELECT 
     * 
