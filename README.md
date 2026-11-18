@@ -20,7 +20,7 @@ Source data
       │
       ▼
 [ Azure Databricks / PySpark ]
-      │   clean · cast types · handle nulls · conform schema
+      │   read · derive columns · standardize values · write Parquet
       ▼
 [ ADLS Gen2 ]  silver  ── cleaned, standardized Parquet
       │
@@ -52,7 +52,7 @@ Source data
 Azure Data Factory pipelines copy raw AdventureWorks data into the bronze layer of ADLS Gen2. The copy activity is **parameterized**, so new source tables can be onboarded by adding configuration rather than rebuilding pipelines — a pattern that scales to real ingestion workloads.
 
 **2. Transformation → Silver**
-Azure Databricks notebooks use PySpark to clean and standardize the raw data: casting columns to correct data types, handling nulls, and conforming naming conventions. The cleaned output is written back to the silver layer as Parquet — columnar and compressed for efficient downstream querying.
+Azure Databricks notebooks use PySpark to read the bronze CSVs (the three yearly sales files are read together with a wildcard) and transform them: deriving month and year on the calendar, building a full name for customers, standardizing product SKUs and names, converting the sales stock date to a timestamp and adding a calculated column. Each table is written to the silver layer as Parquet in overwrite mode, so reruns replace data instead of duplicating it. Parquet is columnar and compressed for efficient downstream querying. Storage credentials are read from a Databricks secret scope rather than hard-coded in the notebook.
 
 **3. Modeling & Serving → Gold**
 Azure Synapse serverless SQL exposes the silver data as a set of **gold-layer views** built with `OPENROWSET` over the Parquet files. These views form the dimensional model — fact and dimension tables for sales, customers, products, calendar, territories, and returns — that reporting consumes. Serverless SQL means there's no provisioned warehouse to manage; queries are billed per use.
@@ -67,9 +67,10 @@ Power BI connects to the Synapse serverless endpoint and builds interactive dash
 Beyond the core pipeline, I made deliberate engineering improvements:
 
 - **Idempotent serving layer** — defined every gold view with `CREATE OR ALTER VIEW` instead of plain `CREATE VIEW`, so the deployment script can be re-run safely any number of times without failing on objects that already exist. This makes the gold layer reproducible and re-deployable, the way real pipeline code needs to be.
+- **No secrets in code** — the notebook reads the service principal's credentials from a Databricks secret scope (backed by Azure Key Vault) instead of hard-coding them.
 - **Least-privilege BI access** — rather than connecting Power BI through an interactive personal account, I provisioned a dedicated SQL login scoped to `db_datareader`. Reporting gets exactly the read access it needs and nothing more — a security-conscious access pattern and a repeatable connection method.
 
-*Planned / further extensions:* a PySpark data-quality validation layer between silver and gold (row-count, null, uniqueness, and referential-integrity checks that fail the pipeline on bad data), Airflow-based orchestration as an alternative to ADF triggers, and incremental/watermark-based loading.
+*Planned / further extensions:* a PySpark data-quality validation layer between silver and gold (row-count, null, uniqueness, and referential-integrity checks that fail the pipeline on bad data), explicit schemas instead of `inferSchema`, Airflow-based orchestration as an alternative to ADF triggers, and incremental/watermark-based loading.
 
 ---
 
